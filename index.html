@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Enders Consulting - Dr. Arthur Enders. AI Strategy & Financial Intelligence.">
+    <title>Enders Consulting | Dr. Arthur Enders</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-core: #050505;
+            --bg-card: rgba(20, 20, 20, 0.7);
+            --text-main: #ececec;
+            --text-muted: #9ca3af;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.4);
+            --border: rgba(255, 255, 255, 0.1);
+            --font-ui: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --brand-blue: rgba(0,61,88,1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-core);
+            color: var(--text-main);
+            font-family: var(--font-ui);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Helper styles */
+        .list-clean {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+        .list-clean li { margin-bottom: 0.75rem; }
+
+        .badge {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 2px 6px;
+            border-radius: 999px;
+            background: rgba(148, 163, 184, 0.12);
+            color: #9ca3af;
+            margin-bottom: 0.75rem;
+        }
+
+        /* TOP BANNER */
+        .top-bar {
+            background-color: var(--brand-blue);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+        }
+        .top-bar-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0.5rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+        .top-logo {
+            height: 64px;
+            width: auto;
+            display: block;
+        }
+        .top-title {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .top-title-slogan {
+            font-family: var(--font-ui);
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            background: linear-gradient(120deg, #e5f2ff, #93c5fd, #e5f2ff);
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: sloganShimmer 7s ease-in-out infinite;
+        }
+        @keyframes sloganShimmer {
+            0% { background-position: 0% 50%; opacity: 0.7; }
+            50% { background-position: 100% 50%; opacity: 1; }
+            100% { background-position: 0% 50%; opacity: 0.8; }
+        }
+
+        .lang-toggle {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .lang-btn {
+            background: none;
+            border: none;
+            color: #d1d5db;
+            padding: 4px 10px;
+            cursor: pointer;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            border-radius: 999px;
+            transition: color 0.2s, background 0.2s;
+        }
+        .lang-btn:hover { color: #fff; }
+        .lang-btn.active {
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+        }
+
+        /* LANGUAGE VISIBILITY */
+        body.lang-de [data-lang="en"] { display: none !important; }
+        body.lang-en [data-lang="de"] { display: none !important; }
+
+        /* ANIMATED BACKGROUND */
+        #canvas-container {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 10%, #111 0%, #000 100%);
+            overflow: hidden;
+        }
+        #canvas-container::before {
+            content: "";
+            position: absolute;
+            inset: -20%;
+            background:
+                radial-gradient(circle at 80% 10%, rgba(59, 130, 246, 0.3), transparent 60%),
+                radial-gradient(circle at 10% 90%, rgba(56, 189, 248, 0.2), transparent 60%);
+            mix-blend-mode: screen;
+            opacity: 0.6;
+            animation: glowShift 18s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+        canvas { display: block; }
+        @keyframes glowShift {
+            0% { transform: translate3d(0,0,0) scale(1); opacity: 0.5; }
+            50% { transform: translate3d(-3%,2%,0) scale(1.05); opacity: 0.7; }
+            100% { transform: translate3d(4%,-3%,0) scale(1.02); opacity: 0.6; }
+        }
+
+        /* LAYOUT & TYPOGRAPHY */
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem 6rem 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        .logo-area {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeIn 1.2s ease-out;
+        }
+        .profile-img {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border);
+            box-shadow: 0 0 25px var(--accent-glow);
+            margin-bottom: 1.5rem;
+        }
+        h1 {
+            font-size: 2.3rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .role-title {
+            font-family: var(--font-mono);
+            color: var(--accent);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .intro-text {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 3rem auto;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.3rem;
+            margin-top: 2.5rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title::before {
+            content: '>';
+            font-family: var(--font-mono);
+            color: var(--accent);
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(8px);
+            transition: transform 0.2s ease, border-color 0.2s;
+        }
+        .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        .card h3 {
+            font-size: 1rem;
+            margin-bottom: 0.4rem;
+            color: #fff;
+        }
+        .card-meta {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .tag {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            padding: 4px 10px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.05);
+            color: var(--text-muted);
+            border: 1px solid transparent;
+        }
+        .tag:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .cta-container {
+            text-align: center;
+            margin-top: 3rem;
+        }
+        .btn-primary {
+            display: inline-block;
+            background: var(--accent);
+            color: #fff;
+            padding: 0.9rem 2.1rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 5rem;
+            font-size: 0.8rem;
+            color: #555;
+            border-top: 1px solid var(--border);
+            padding-top: 2rem;
+        }
+        .legal-links a {
+            color: #777;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+        .legal-links a:hover { color: var(--accent); }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            inset: 0;
+            background-color: rgba(0,0,0,0.9);
+            backdrop-filter: blur(5px);
+            overflow-y: auto;
+        }
+        .modal-content {
+            background-color: #111;
+            margin: 5% auto;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            color: #ccc;
+        }
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-modal:hover { color: #fff; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+            .container { padding-top: 4rem; }
+            .top-logo { height: 50px; }
+        }
+    </style>
+</head>
+<body class="lang-de">
+    <div id="canvas-container">
+        <canvas id="network"></canvas>
+    </div>
+
+    <header class="top-bar">
+        <div class="top-bar-inner">
+            <div class="top-brand">
+                <img src="logo.png" alt="Enders Consulting Logo" class="top-logo">
+            </div>
+
+            <div class="top-title">
+                <span class="top-title-slogan">Where AI Becomes Financial Strategy</span>
+            </div>
+
+            <div class="lang-toggle">
+                <button class="lang-btn btn-de active" onclick="switchLanguage('de')">DE</button>
+                <button class="lang-btn btn-en" onclick="switchLanguage('en')">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="logo-area">
+            <img src="arthur.jpg" alt="Dr. Arthur Enders" class="profile-img">
+
+            <div data-lang="de">
+                <h1>Dr. Arthur Enders</h1>
+                <p class="role-title">AI Strategy &amp; Financial Intelligence</p>
+                <p class="intro-text">
+                    Ich helfe Banken, Vermögensverwaltern und Gründer:innen, KI in belastbare
+                    Investment- und Geschäftsentscheidungen zu übersetzen – von LLM-gestützter
+                    Beratung bis zu quantitativen Research-Setups.
+                </p>
+            </div>
+
+            <div data-lang="en">
+                <h1>Dr. Arthur Enders</h1>
+                <p class="role-title">AI Strategy &amp; Financial Intelligence</p>
+                <p class="intro-text">
+                    I help banks, wealth managers and founders turn AI into robust investment
+                    and business decisions – from LLM-powered advisory flows to quantitative
+                    research setups.
+                </p>
+            </div>
+        </div>
+
+        <main>
+            <!-- WHAT I DO -->
+            <h2 class="section-title">
+                <span data-lang="de">Was ich mache</span>
+                <span data-lang="en">What I Do</span>
+            </h2>
+
+            <div class="card">
+                <div data-lang="de">
+                    <h3>AI für Vermögensverwaltung &amp; Beratung</h3>
+                    <p>Konzeption, Test und Kalibrierung von KI-Systemen für Finanzberatung:
+                    Risiko-Profiling, Portfoliovorschläge, Suitability-Checks und Reporting – mit
+                    Fokus auf Nachvollziehbarkeit und Compliance.</p>
+                </div>
+                <div data-lang="en">
+                    <h3>AI for Wealth &amp; Advisory</h3>
+                    <p>Design, test and calibration of AI systems for financial advice: risk profiling,
+                    portfolio proposals, suitability checks and reporting – with a focus on
+                    explainability and compliance.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div data-lang="de">
+                    <h3>Quantitative Research &amp; Experiment Design</h3>
+                    <p>Entwicklung von Research-Pipelines: von empirischer Kapitalmarktforschung
+                    bis zu A/B-Tests für neue AI-gestützte Produkte.</p>
+                </div>
+                <div data-lang="en">
+                    <h3>Quant Research &amp; Experiment Design</h3>
+                    <p>Building research pipelines: from empirical capital markets research to A/B tests
+                    for new AI-enabled products.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div data-lang="de">
+                    <h3>Strategisches Sparring für Gründer:innen</h3>
+                    <p>Begleitung von Early-Stage-Teams bei Pricing, Go-to-Market und Investor Story –
+                    mit Blick auf Unit Economics und Daten.</p>
+                </div>
+                <div data-lang="en">
+                    <h3>Strategic Sparring for Founders</h3>
+                    <p>Supporting early-stage teams on pricing, go-to-market and investor story –
+                    with a focus on data and unit economics.</p>
+                </div>
+            </div>
+
+            <!-- SELECTED EXPERIENCE -->
+            <h2 class="section-title">
+                <span data-lang="de">Ausgewählte Erfahrung</span>
+                <span data-lang="en">Selected Experience</span>
+            </h2>
+
+            <div class="card">
+                <h3>Financial Advising Expert – AI Trainer</h3>
+                <span class="card-meta">Mercor · 2025 – <span data-lang="de">heute</span><span data-lang="en">present</span></span>
+                <p data-lang="de">Evaluation und Kalibrierung von KI-generierten Finanzplänen; Design von
+                Test-Suiten und Edge-Case-Szenarien für LLM-basierte Beratung.</p>
+                <p data-lang="en">Evaluation and calibration of AI-generated financial plans; design of
+                test suites and edge-case scenarios for LLM-based advisory systems.</p>
+            </div>
+
+            <div class="card">
+                <h3>Wealth Manager</h3>
+                <span class="card-meta">RP Rheinische Portfolio Management GmbH · 2025</span>
+                <p data-lang="de">Vermögensverwaltung für Privatkund:innen und Entwicklung
+                datengetriebener Investmentstrategien.</p>
+                <p data-lang="en">Wealth management for private clients and development of
+                data-driven investment strategies.</p>
+            </div>
+
+            <div class="card">
+                <h3>Co-Founder &amp; CEO</h3>
+                <span class="card-meta">REVISIT GmbH · 2022 – 2024</span>
+                <p data-lang="de">Gründung und Skalierung eines Marktplatz-Startups für lokale Abos;
+                Teamführung, Produkt &amp; Tech, sowie sechsstellige Angel-Finanzierung.</p>
+                <p data-lang="en">Founded and scaled a marketplace for local subscriptions; team leadership,
+                product &amp; tech ownership and six-figure angel round.</p>
+            </div>
+
+            <!-- RESEARCH -->
+            <h2 class="section-title">
+                <span data-lang="de">Forschung &amp; Publikationen</span>
+                <span data-lang="en">Research &amp; Publications</span>
+            </h2>
+
+            <div class="card">
+                <span class="badge" data-lang="de">Peer-Reviewed</span>
+                <span class="badge" data-lang="en">Peer-Reviewed</span>
+
+                <ul class="list-clean">
+    <li>
+        <strong>
+            <a href="https://www.pm-research.com/content/pmrjesg/5/4/116"
+               target="_blank" rel="noopener">
+                How to Attract ESG Funds
+            </a>
+        </strong><br>
+        <span class="card-meta">The Journal of Impact and ESG Investing, 2025</span>
+    </li>
+
+    <li>
+        <strong>
+            <a href="https://www.pm-research.com/content/iijpormgmt/early/2025/06/07/jpm20251736"
+               target="_blank" rel="noopener">
+               Predicting Returns of Listed Private Equity
+            </a>
+        </strong><br>
+        <span class="card-meta">
+            The Journal of Portfolio Management, 2025 (with M. Degosciu, K. Schmedders, M. Werner)
+        </span>
+    </li>
+
+    <li>
+        <strong>
+            <a href="https://doi.org/10.1111/fire.12414"
+               target="_blank" rel="noopener">
+               Carbon Risk and Equity Prices
+            </a>
+        </strong><br>
+        <span class="card-meta">
+            The Financial Review, 2024 (with T. Lontzek, K. Schmedders, M. Thalhammer)
+        </span>
+    </li>
+</ul>
+
+            </div>
+
+            <!-- SPEAKING & CONFERENCES -->
+            <h2 class="section-title">
+                <span data-lang="de">Vorträge &amp; Konferenzen</span>
+                <span data-lang="en">Speaking &amp; Conferences</span>
+            </h2>
+
+            <div class="card">
+
+    <ul class="list-clean">
+        <li>
+            <strong data-lang="de">
+                European Economic Association &amp; Econometric Society European Meeting
+            </strong>
+            <strong data-lang="en">
+                European Economic Association &amp; Econometric Society European Meeting (Joint Congress)
+            </strong><br>
+            <span class="card-meta">Barcelona · 2023</span>
+
+        </li>
+
+        <li>
+            <strong data-lang="de">Financial Management Association European Conference</strong>
+            <strong data-lang="en">Financial Management Association European Conference</strong><br>
+            <span class="card-meta">Aalborg · 2023</span>
+        </li>
+
+        <li>
+            <strong data-lang="de">
+                European Association of Environmental and Resource Economists Annual Conference
+            </strong>
+            <strong data-lang="en">
+                European Association of Environmental and Resource Economists Annual Conference
+            </strong><br>
+            <span class="card-meta">Limassol · 2023</span>
+        </li>
+
+        <li>
+            <strong data-lang="de">
+                Brown Bag Seminar at Westfälische Wilhelms-Universität Münster
+            </strong>
+            <strong data-lang="en">
+                Brown Bag Seminar at Westfälische Wilhelms-Universität Münster
+            </strong><br>
+            <span class="card-meta">Münster · 2022</span>
+
+        </li>
+
+        <li>
+            <strong data-lang="de">Brown Bag Seminar (Maastricht University)</strong>
+            <strong data-lang="en">Brown Bag Seminar (Maastricht University)</strong><br>
+            <span class="card-meta">Maastricht · 2022</span>
+
+        </li>
+
+        <li>
+            <strong data-lang="de">Brown Bag Seminar at ESSEC Business School</strong>
+            <strong data-lang="en">Brown Bag Seminar at ESSEC Business School</strong><br>
+            <span class="card-meta">Paris · 2022</span>
+        </li>
+
+        <li>
+            <strong data-lang="de">
+                European Association of Environmental and Resource Economists Annual Conference
+            </strong>
+            <strong data-lang="en">
+                European Association of Environmental and Resource Economists Annual Conference
+            </strong><br>
+            <span class="card-meta">Rimini · 2022</span>
+        </li>
+    </ul>
+</div>
+
+            <!-- TECH STACK -->
+            <h2 class="section-title">
+                <span data-lang="de">Tech Stack</span>
+                <span data-lang="en">Tech Stack</span>
+            </h2>
+
+            <div class="tags">
+                <span class="tag">Python (Pandas, NumPy)</span>
+                <span class="tag">Scikit-learn</span>
+                <span class="tag">TensorFlow</span>
+                <span class="tag">R (Data Science, NLP)</span>
+                <span class="tag">MATLAB</span>
+                <span class="tag">Monte Carlo</span>
+                <span class="tag">Optimization</span>
+                <span class="tag">SQL</span>
+                <span class="tag">Git</span>
+                <span class="tag">Econometrics</span>
+                <span class="tag">Financial Modeling</span>
+            </div>
+
+            <div class="cta-container">
+                <a href="mailto:arthur@endersconsulting.tech" class="btn-primary">
+                    <span data-lang="de">Kontakt aufnehmen</span>
+                    <span data-lang="en">Get in Touch</span>
+                </a>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Enders Consulting.</p>
+            <div class="legal-links">
+                <a href="#" onclick="openModal('impressum'); return false;">Impressum</a>
+                <a href="#" onclick="openModal('privacy'); return false;">Datenschutz / Privacy</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- MODALS -->
+    <div id="impressum" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('impressum')">&times;</span>
+        <h2>Impressum</h2>
+        <br>
+        <p>
+            <strong>Enders Consulting</strong><br>
+            Dr. Arthur Enders<br><br>
+            Stockem 29<br>
+            4700 Eupen<br>
+            Belgien
+        </p>
+        <br>
+        <p>
+            <strong>Kontakt:</strong><br>
+            E-Mail: arthur@endersconsulting.tech
+        </p>
+        <br>
+        <p>
+            <strong>Unternehmensnummer:</strong><br>
+            0798.546.461
+        </p>
+        <br>
+        <p>
+            <strong>Mehrwertsteuernummer:</strong><br>
+            BE0798.546.461
+        </p>
+        <br>
+        <p>
+            <strong>Redaktionell verantwortlich:</strong><br>
+            Dr. Arthur Enders
+        </p>
+    </div>
+</div>
+
+
+<div id="privacy" class="modal">
+<div class="modal-content">
+    <span class="close-modal" onclick="closeModal('privacy')">&times;</span>
+    <h2>Datenschutzerklärung / Privacy Policy</h2>
+    <br>
+
+    <h3>1. Verantwortlicher / Controller</h3>
+    <p>
+        Verantwortlich für die Datenverarbeitung auf dieser Website im Sinne der
+        EU-Datenschutzgrundverordnung (DSGVO / GDPR) ist:<br><br>
+        <strong>Enders Consulting</strong><br>
+        Dr. Arthur Enders<br>
+        Stockem 29<br>
+        4700 Eupen<br>
+        Belgium<br>
+        E-Mail: arthur@endersconsulting.tech
+    </p>
+    <br>
+
+    <h3>2. Allgemeine Hinweise</h3>
+    <p>
+        Der Schutz Ihrer personenbezogenen Daten ist uns wichtig. Wir verarbeiten
+        personenbezogene Daten ausschließlich im Einklang mit der DSGVO und den
+        geltenden belgischen Datenschutzbestimmungen. Diese Website dient der
+        reinen Information über unsere Dienstleistungen.
+    </p>
+    <br>
+
+    <h3>3. Hosting (GitHub Pages)</h3>
+    <p>
+        Diese Website wird als statische Website über <strong>GitHub Pages</strong>
+        bereitgestellt, ein Dienst der GitHub Inc., 88 Colin P Kelly Jr St,
+        San Francisco, CA 94107, USA.
+        Beim Aufruf der Website werden durch GitHub automatisch Server-Logfiles
+        erhoben (z.&nbsp;B. IP-Adresse, Browser-Typ, Betriebssystem, Zeitpunkt
+        des Zugriffs). Diese Verarbeitung erfolgt auf Grundlage von
+        <strong>Art. 6 Abs. 1 lit. f DSGVO</strong> (berechtigtes Interesse an
+        der technischen Bereitstellung und Sicherheit der Website).
+    </p>
+    <p>
+        Weitere Informationen zur Datenverarbeitung durch GitHub finden Sie in der
+        Datenschutzerklärung von GitHub.
+    </p>
+    <br>
+
+    <h3>4. Cookies &amp; Tracking</h3>
+    <p>
+        Wir setzen selbst keine Cookies, keine Analyse-Tools und keine Tracking-
+        Technologien ein, die über die rein technische Bereitstellung der Website
+        hinausgehen.
+    </p>
+    <br>
+
+    <h3>5. Kontakt per E-Mail</h3>
+    <p>
+        Wenn Sie uns per E-Mail kontaktieren, verarbeiten wir Ihre angegebenen
+        personenbezogenen Daten (z.&nbsp;B. Name, E-Mail-Adresse, Inhalt der
+        Nachricht) ausschließlich zur Bearbeitung und Beantwortung Ihrer Anfrage.
+        Rechtsgrundlage ist <strong>Art. 6 Abs. 1 lit. b DSGVO</strong>, sofern es
+        um die Anbahnung oder Durchführung eines Vertrags geht, oder
+        <strong>Art. 6 Abs. 1 lit. f DSGVO</strong> (berechtigtes Interesse an der
+        Beantwortung von Anfragen).
+    </p>
+    <p>
+        Wir speichern diese Daten nur so lange, wie es für die Bearbeitung Ihrer
+        Anfrage erforderlich ist oder gesetzliche Aufbewahrungspflichten bestehen.
+    </p>
+    <br>
+
+    <h3>6. Datenübermittlung in Drittländer</h3>
+    <p>
+        Durch das Hosting bei GitHub (USA) kann eine Übermittlung von
+        Verbindungsdaten in ein Drittland (außerhalb der EU / des EWR) erfolgen.
+        GitHub setzt hierfür nach eigenen Angaben geeignete Garantien im Sinne der
+        DSGVO ein (z.&nbsp;B. Standardvertragsklauseln).
+    </p>
+    <br>
+
+    <h3>7. Ihre Rechte</h3>
+    <p>
+        Sie haben im Rahmen der geltenden gesetzlichen Bestimmungen das Recht auf
+        Auskunft über Ihre bei uns gespeicherten personenbezogenen Daten, sowie
+        ggf. ein Recht auf Berichtigung, Löschung, Einschränkung der Verarbeitung,
+        Widerspruch gegen die Verarbeitung und Datenübertragbarkeit (Art. 15–21 DSGVO).
+    </p>
+    <p>
+        Hierzu sowie zu weiteren Fragen zum Thema personenbezogene Daten können Sie
+        sich jederzeit an uns wenden: arthur@endersconsulting.tech.
+    </p>
+    <br>
+
+    <h3>8. Aufsichtsbehörde</h3>
+    <p>
+        Sie haben außerdem das Recht, sich bei einer Datenschutzaufsichtsbehörde
+        zu beschweren. In Belgien ist dies insbesondere die
+        <strong>Gegevensbeschermingsautoriteit / Autorité de protection des données
+        (GBA / APD)</strong>.
+    </p>
+</div>
+</div>
+
+
+    <script>
+        function switchLanguage(lang) {
+            document.body.classList.remove('lang-de', 'lang-en');
+            document.body.classList.add('lang-' + lang);
+            document.querySelectorAll('.lang-btn').forEach(function(btn) {
+                btn.classList.toggle('active', btn.classList.contains('btn-' + lang));
+            });
+        }
+
+        function openModal(id) {
+            var modal = document.getElementById(id);
+            if (modal) modal.style.display = "block";
+        }
+        function closeModal(id) {
+            var modal = document.getElementById(id);
+            if (modal) modal.style.display = "none";
+        }
+        window.addEventListener('click', function(event) {
+            if (event.target.classList && event.target.classList.contains('modal')) {
+                event.target.style.display = "none";
+            }
+        });
+
+        (function() {
+            const canvas = document.getElementById('network');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let width, height, particles = [];
+            const count = 70;
+            const connectionDist = 140;
+            const speed = 0.3;
+
+            function resize() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            }
+
+            class Particle {
+                constructor() { this.reset(); }
+                reset() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.vx = (Math.random() - 0.5) * speed;
+                    this.vy = (Math.random() - 0.5) * speed;
+                }
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    if (this.x < 0 || this.x > width) this.vx *= -1;
+                    if (this.y < 0 || this.y > height) this.vy *= -1;
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            function initParticles() {
+                particles = [];
+                for (let i = 0; i < count; i++) particles.push(new Particle());
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+
+                const gradient = ctx.createRadialGradient(
+                    width * 0.8, height * 0.1, 0,
+                    width * 0.8, height * 0.1, width
+                );
+                gradient.addColorStop(0, 'rgba(59,130,246,0.35)');
+                gradient.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, width, height);
+
+                ctx.fillStyle = 'rgba(226, 232, 240, 0.8)';
+                for (let i = 0; i < particles.length; i++) {
+                    const p1 = particles[i];
+                    p1.update();
+                    p1.draw();
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const p2 = particles[j];
+                        const dx = p1.x - p2.x;
+                        const dy = p1.y - p2.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < connectionDist) {
+                            const alpha = 0.15 * (1 - dist / connectionDist);
+                            ctx.strokeStyle = 'rgba(148, 163, 184,' + alpha + ')';
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(p1.x, p1.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                requestAnimationFrame(animate);
+            }
+
+            window.addEventListener('resize', resize);
+            resize();
+            initParticles();
+            animate();
+        })();
+    </script>
+</body>
+</html>
