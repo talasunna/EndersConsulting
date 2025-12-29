@@ -334,6 +334,40 @@
         }
 
         @media (max-width: 600px) {
+          /* Mobile header layout: prevent overlap caused by the centered absolute title */
+.top-bar-inner {
+  padding: 0.65rem 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.top-brand { order: 1; }
+.lang-toggle { order: 2; }
+
+/* Move the slogan to its own row */
+.top-title {
+  order: 3;
+  position: static;
+  left: auto;
+  top: auto;
+  transform: none;
+  width: 100%;
+  text-align: center;
+  padding-bottom: 0.25rem;
+}
+
+.top-title-slogan {
+  white-space: normal;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  line-height: 1.25;
+}
+
+.top-logo { height: 46px; }
+
+/* Slightly larger tap targets on mobile */
+.lang-btn { padding: 6px 12px; }
+
             h1 { font-size: 2rem; }
             .container { padding-top: 4rem; }
             .top-logo { height: 50px; }
